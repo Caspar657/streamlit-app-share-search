@@ -17,11 +17,19 @@ keyword_list = user_input.split(", ")
 # function defined
 def share_of_search(kw_list, start_date, end_date):
 
-        def calculate_rolling(df): #calculate 12 month rolling average of search index
+        def calculate_rolling_yearly(df): #calculate 12 month rolling average of search index
             columns = list(df) #create list of column names
             for column in columns:
                 col_name = str(column) + '_rolling'
                 df[col_name] = df.rolling(window=12)[column].mean()
+            df = df.drop(columns = columns)
+            return df 
+
+        def calculate_rolling_quarterly(df): #calculate 12 month rolling average of search index
+            columns = list(df) #create list of column names
+            for column in columns:
+                col_name = str(column) + '_rolling'
+                df[col_name] = df.rolling(window=3)[column].mean()
             df = df.drop(columns = columns)
             return df 
 
@@ -46,9 +54,24 @@ def share_of_search(kw_list, start_date, end_date):
 
         df = pytrends.interest_over_time()
         df = df.drop(columns = 'isPartial') #remove extra column
+
+        # need to insert steps to calculate more than 5 keywords
+        # step 1: select first five elements of list
+        # step 2: pull Google Trends data for 5
+        # step 3: Find column name of the highest value (which will be 100)
+        # step 4: select next 4 elements of the list and add highest value
+        # step 5: pull Google Trends data
+        # step 6: if highest value column name is not first high value, rerun first pull with highest value.
+        # step 7: repeat until all values are checked 
         
-        #apply transformations to data
-        rolling_df = calculate_rolling(df)
+        #apply transformations to data. First determine date range to check that rollling average done correctly
+        if (end_date - start_date >= datetime.timedelta(days=1825)):
+            rolling_df = calculate_rolling_yearly(df)
+        elif (end_date - start_date <= datetime.timedelta(days=1825)):
+            rolling_df = calculate_rolling_quarterly(df)
+        else:
+            raise Exception('A date error occured.')
+        
         total_df = add_total(rolling_df)
         share_search_df = share_search(total_df)
 
