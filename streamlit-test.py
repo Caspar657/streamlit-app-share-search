@@ -8,7 +8,7 @@ st.title('AFFINITY Share of Search Calculator')
 startDate = st.date_input("Start Date", min_value=datetime(2004,1,1))
 endDate = st.date_input("End Date", min_value=datetime(2004,1,1))
 
-user_input = st.text_input("Enter up to 5 search terms seperated by a comma")
+user_input = st.text_input("Enter up to 5 search terms separated by a comma")
 
 button = st.button(label='Fetch Share of Search')
 
