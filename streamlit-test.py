@@ -45,7 +45,10 @@ def share_of_search(kw_list, start_date, end_date):
         pytrends.build_payload(kw_list, cat=0, timeframe=start_date + " " + end_date, geo='AU', gprop='')
 
         df = pytrends.interest_over_time()
-        df = df.drop(columns = 'isPartial') #remove extra column
+        if 'isPartial' in df.columns:
+            df = df.drop(columns = 'isPartial') #remove extra column
+        else:
+        	pass
         
         #apply transformations to data
         rolling_df = calculate_rolling(df)
