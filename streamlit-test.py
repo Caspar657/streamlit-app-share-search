@@ -70,6 +70,9 @@ else:
 
 download = st.button('Download CSV File')
 if download:
+    sDate = startDate.strftime("%Y-%m-%d")
+    eDate = endDate.strftime("%Y-%m-%d")
+    df_1 = share_of_search(keyword_list, sDate, eDate)
     csv = df_1.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()  # some strings
     linko= f'<a href="data:file/csv;base64,{b64}" download="Share_of_search.csv">Download csv file</a>'
