@@ -70,6 +70,7 @@ else:
 
 download = st.button('Download CSV File')
 if download:
+    keyword_list = user_input.split(", ")
     sDate = startDate.strftime("%Y-%m-%d")
     eDate = endDate.strftime("%Y-%m-%d")
     df_1 = share_of_search(keyword_list, sDate, eDate)
