@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np 
 import pandas as pd 
 from datetime import datetime
+import base64
 
 st.title('AFFINITY Share of Search Calculator')
 
@@ -66,4 +67,11 @@ if button:
     st.write(df_1)
 else:
     pass
+
+download = st.button('Download CSV File')
+if download:
+    csv = df_1.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # some strings
+    linko= f'<a href="data:file/csv;base64,{b64}" download="Share_of_search.csv">Download csv file</a>'
+    st.markdown(linko, unsafe_allow_html=True)
 
