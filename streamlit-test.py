@@ -40,12 +40,59 @@ def share_of_search(kw_list, start_date, end_date):
             df = df.drop(columns = ['rolling_total'])
             return df
         
-        #query Google Trends
-        from pytrends.request import TrendReq
-        pytrends = TrendReq(hl='en-US', tz = 600)
-        pytrends.build_payload(kw_list, cat=0, timeframe=start_date + " " + end_date, geo='AU', gprop='')
+        def retrieve_search_trends(kw_list, start_date, end_date):
 
-        df = pytrends.interest_over_time()
+        #query Google Trends
+
+            def pytrends_query(kw_list, start_date, end_date):
+                from pytrends.request import TrendReq
+                pytrends = TrendReq(hl='en-US', tz = 600)
+                pytrends.build_payload(kw_list, cat=0, timeframe=start_date + " " + end_date, geo='AU', gprop='')
+                
+                df = pytrends.interest_over_time()
+                if 'isPartial' in df.columns:
+                    df = df.drop(columns = 'isPartial') #remove extra column
+                else:
+                    pass
+                
+                return df
+                
+            def iterate_over_max(kw_list, start_date, end_date):
+                # check that variables passed in correctly and get dataframe for first 5 keywords
+                if isinstance(kw_list, list):
+                    df = pytrends_query(kw_list[:5], start_date, end_date)
+                else:
+                    raise Exception('kw_list myst be a list.')
+                
+                # get max value and keyword for the first five terms
+                max_col_name = df.max().idxmax() #gets column name of maximum value in Dataframe
+                
+                # checking that keyword list is complete. If not, loop continues
+                while set(kw_list) != set(df.columns):
+                    for keyword in kw_list:
+                        if keyword in df.columns:
+                            pass
+                        else:
+                            max_test_list = [max_col_name, keyword]
+                            df2 = pytrends_query(max_test_list, start_date, end_date)
+                            # if the next keyword maximum value is smaller than the current index, then add the column with those values to the dataframe
+                            if df2.max()[0] >= df2.max()[1]: 
+                                df[keyword] = df2[keyword]
+                            # if the next keyword is larger, then update the max column name and break to start the loop again
+                            else: 
+                                max_col_name = keyword
+                                new_max_keyword = kw_list[:4].append(max_col_name)
+                                df = pytrends_query(new_max_keyword, start_date, end_date)
+                                break
+
+                return df
+
+            df = iterate_over_max(kw_list, start_date, end_date)
+
+            return df
+
+
+        df = retrieve_search_trends(kw_list, start_date, end_date)
         if 'isPartial' in df.columns:
             df = df.drop(columns = 'isPartial') #remove extra column
         else:
