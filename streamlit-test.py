@@ -9,14 +9,50 @@ st.title('AFFINITY Share of Search Calculator')
 startDate = st.date_input("Start Date", min_value=datetime(2004,1,1))
 endDate = st.date_input("End Date", min_value=datetime(2004,1,1))
 
+
+#text input
 user_input = st.text_input("Enter search terms separated by a comma")
+
+
+#country dropdown
+country = st.selectbox("Select country", ("Australia", "United Kingdom"))
+
+
+#state/region dropdown
+if country == "Australia":
+    state = st.selectbox("Select state / region", ("Whole country", "NSW", "ACT", "QLD", "VIC", "SA", "WA", "TAS"))
+elif country == "United Kingdom":
+    state = st.selectbox("Select state/region", ("Whole country", "England", "Northern Ireland", "Scotland", "Wales"))
+else:
+    pass
+
+
+#defining country dict
+country_dict = {"Australia" :"AU",
+                "United Kingdom": "GB"}
+
+
+#defining dict to construct geo code query
+state_dict = {"Whole country": "",
+            "NSW": "-NSW",
+            "ACT": "-ACT",
+            "QLD": "-QLD",
+            "VIC": "-VIC",
+            "SA": "-SA",
+            "WA": "-WA",
+            "TAS": "-TAS",
+            "England": "-ENG",
+            "Northern Ireland": "-NIR",
+            "Scotland": "-SCT",
+            "Wales": "-WLS"}
+
 
 button = st.button(label='Fetch Share of Search')
 
 keyword_list = user_input.split(", ")
 
 # function defined
-def share_of_search(kw_list, start_date, end_date):
+def share_of_search(kw_list, start_date, end_date, geography):
 
         def calculate_rolling(df): #calculate 12 month rolling average of search index
             columns = list(df) #create list of column names
@@ -47,7 +83,7 @@ def share_of_search(kw_list, start_date, end_date):
             def pytrends_query(kw_list, start_date, end_date):
                 from pytrends.request import TrendReq
                 pytrends = TrendReq(hl='en-US', tz = 600)
-                pytrends.build_payload(kw_list, cat=0, timeframe=start_date + " " + end_date, geo='AU', gprop='')
+                pytrends.build_payload(kw_list, cat=0, timeframe=start_date + " " + end_date, geo=geography, gprop='')
                 
                 df = pytrends.interest_over_time()
                 if 'isPartial' in df.columns:
@@ -105,15 +141,24 @@ def share_of_search(kw_list, start_date, end_date):
 
         return share_search_df
 
+
+# getting geo code
+country_geo = country_dict[country]
+state_geo = state_dict[state]
+
+geography = country_geo + state_geo
+
+
 # button press
 if button:
     sDate = startDate.strftime("%Y-%m-%d")
     eDate = endDate.strftime("%Y-%m-%d")
-    df_1 = share_of_search(keyword_list, sDate, eDate)
+    df_1 = share_of_search(keyword_list, sDate, eDate, geography)
     st.line_chart(data=df_1)
     st.write(df_1)
 else:
     pass
+
 
 download = st.button('Download CSV File')
 if download:
