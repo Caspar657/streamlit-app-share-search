@@ -15,7 +15,7 @@ user_input = st.text_input("Enter search terms separated by a comma")
 
 
 #country dropdown
-country = st.selectbox("Select country", ("Australia", "United Kingdom"))
+country = st.selectbox("Select country", ("Worldwide", "Australia", "United Kingdom"))
 
 
 #state/region dropdown
@@ -24,12 +24,13 @@ if country == "Australia":
 elif country == "United Kingdom":
     state = st.selectbox("Select state/region", ("Whole country", "England", "Northern Ireland", "Scotland", "Wales"))
 else:
-    pass
+    state = ""
 
 
 #defining country dict
 country_dict = {"Australia" :"AU",
-                "United Kingdom": "GB"}
+                "United Kingdom": "GB",
+                "Worldwide": ""}
 
 
 #defining dict to construct geo code query
@@ -44,7 +45,8 @@ state_dict = {"Whole country": "",
             "England": "-ENG",
             "Northern Ireland": "-NIR",
             "Scotland": "-SCT",
-            "Wales": "-WLS"}
+            "Wales": "-WLS",
+            "": ""}
 
 
 button = st.button(label='Fetch Share of Search')
