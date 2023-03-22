@@ -107,8 +107,7 @@ def share_of_search(kw_list, start_date, end_date, geography):
                     "sec-fetch-mode": "cors",
                     "sec-fetch-site": "same-origin",
                     "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36",
-                    "x-client-data": "CI62yQEIprbJAQjBtskBCKmdygEIgPzKAQiSocsBCPyqzAEI5JfNAQ==",
-                    "Decoded":
+                    "x-client-data": "CI62yQEIprbJAQjBtskBCKmdygEIgPzKAQiSocsBCPyqzAEI5JfNAQ=="
                     }
                 pytrends = TrendReq(hl='en-US', tz = 600, request_args = request_args)
                 pytrends.build_payload(kw_list, cat=0, timeframe=start_date + " " + end_date, geo=geography, gprop='')
