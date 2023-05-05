@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd 
 from datetime import datetime
 import base64
+import pytrends
 
 st.title('AFFINITY Share of Search Calculator')
 
