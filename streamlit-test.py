@@ -85,9 +85,10 @@ def share_of_search(kw_list, start_date, end_date, geography):
 
             def pytrends_query(kw_list, start_date, end_date):
                 from pytrends.request import TrendReq
-                pytrends.build_payload(kw_list, cat=0, timeframe=start_date + " " + end_date, geo=geography, gprop='')
+                mytrend = TrendReq(hl='en-US', tz=)
+                mytrend.build_payload(kw_list, cat=0, timeframe=start_date + " " + end_date, geo=geography, gprop='')
                 
-                df = pytrends.interest_over_time()
+                df = mytrend.interest_over_time()
                 if 'isPartial' in df.columns:
                     df = df.drop(columns = 'isPartial') #remove extra column
                 else:
