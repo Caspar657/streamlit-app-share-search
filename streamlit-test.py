@@ -86,6 +86,8 @@ def share_of_search(kw_list, start_date, end_date, geography):
             def pytrends_query(kw_list, start_date, end_date):
                 from pytrends.request import TrendReq
                 mytrend = TrendReq(hl='en-US', tz=360)
+                #adding in retry loop
+                while 
                 mytrend.build_payload(kw_list, cat=0, timeframe=start_date + " " + end_date, geo=geography, gprop='')
                 
                 df = mytrend.interest_over_time()
