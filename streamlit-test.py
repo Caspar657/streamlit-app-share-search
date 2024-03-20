@@ -57,11 +57,11 @@ keyword_list = user_input.split(", ")
 # function defined
 def share_of_search(kw_list, start_date, end_date, geography):
 
-        def calculate_rolling(df): #calculate 6 month rolling average of search index
+        def calculate_rolling(df): #calculate 12 month rolling average of search index
             columns = list(df) #create list of column names
             for column in columns:
                 col_name = str(column) + '_rolling'
-                df[col_name] = df.rolling(window=6)[column].mean()
+                df[col_name] = df.rolling(window=12)[column].mean()
             df = df.drop(columns = columns)
             return df 
 
